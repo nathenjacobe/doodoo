@@ -1,6 +1,8 @@
-# todo cli
+# doodoo: a todo cli written in rust with ratatui
 
-## new: [n] | complete: [↵] | delete: [d] | nav: [↑↓→←],[hjkl] | new/rename page: [1-9] | delete page: {empty name} | quit: [q]
+### controls (also shows at the bottom of the cli):
+new: [n] | rename: [r] | complete: [↵] | delete: [d] | nav: [↑↓→←],[hjkl] | new/rename page:[1-9] | quit: [q] 
 
-very basic cli that facilitates todos with paging. supports vim-style navigation. stores your todos in todo.json.
-built using ratatui
+
+rename to empty string to delete todo / page
+hold shift with a navigation key to move a todo / page around
