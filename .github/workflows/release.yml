@@ -52,14 +52,24 @@ jobs:
           fi
         shell: bash
 
-      - name: Package binary
-        shell: ${{ matrix.os == 'windows-latest' && 'powershell' || 'bash' }}
+      # ------------------------------
+      #   LINUX + MACOS PACKAGING
+      # ------------------------------
+      - name: Package (Unix)
+        if: matrix.os != 'windows-latest'
         run: |
-          if ("${{ matrix.os }}" -eq "windows-latest") {
-            Compress-Archive -Path target/release/${{ matrix.binary-name }} -DestinationPath ${{ matrix.asset }}
-          } else {
-            tar -czvf ${{ matrix.asset }} -C target/release ${{ matrix.binary-name }}
-          }
+          tar -czvf ${{ matrix.asset }} -C target/release ${{ matrix.binary-name }}
+        shell: bash
+
+      # ------------------------------
+      #   WINDOWS PACKAGING
+      # ------------------------------
+      - name: Package (Windows)
+        if: matrix.os == 'windows-latest'
+        run: >
+          Compress-Archive -Path target\release\${{ matrix.binary-name }}
+          -DestinationPath ${{ matrix.asset }}
+        shell: powershell
 
       - uses: actions/upload-artifact@v4
         with:
