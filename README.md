@@ -6,3 +6,5 @@ new: [n] | rename: [r] | complete: [↵] | delete: [d] | nav: [↑↓→←],[hj
 rename to empty string to delete todo / page
 
 hold shift with a navigation key to move a todo / page around
+
+create a todo.json in your current working directory to use that instead of the global one; to stop using the one in your current working directory, move out of your current working directory.
