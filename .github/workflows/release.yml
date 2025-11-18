@@ -14,17 +14,20 @@ jobs:
       matrix:
         include:
           - os: ubuntu-latest
-            target: native
+            target: x86_64-unknown-linux-gnu
+            binary-path: target/x86_64-unknown-linux-gnu/release/
             binary-name: doodoo
             asset: doodoo-linux-x86_64.tar.gz
 
           - os: macos-latest
             target: x86_64-apple-darwin
+            binary-path: target/x86_64-apple-darwin/release/
             binary-name: doodoo
             asset: doodoo-macos-x86_64.tar.gz
 
           - os: windows-latest
             target: x86_64-pc-windows-msvc
+            binary-path: target/x86_64-pc-windows-msvc/release/
             binary-name: doodoo.exe
             asset: doodoo-windows-x86_64.zip
 
@@ -39,37 +42,22 @@ jobs:
         with:
           toolchain: stable
           targets: ${{ matrix.target }}
-        if: matrix.target != 'native'
 
       - uses: Swatinem/rust-cache@v2
 
       - name: Build binary
-        run: |
-          if [ "${{ matrix.target }}" = "native" ]; then
-            cargo build --release
-          else
-            cargo build --release --target ${{ matrix.target }}
-          fi
-        shell: bash
+        run: cargo build --release --target ${{ matrix.target }}
 
-      # ------------------------------
-      #   LINUX + MACOS PACKAGING
-      # ------------------------------
       - name: Package (Unix)
         if: matrix.os != 'windows-latest'
         run: |
-          tar -czvf ${{ matrix.asset }} -C target/release ${{ matrix.binary-name }}
-        shell: bash
+          tar -czvf ${{ matrix.asset }} -C ${{ matrix.binary-path }} ${{ matrix.binary-name }}
 
-      # ------------------------------
-      #   WINDOWS PACKAGING
-      # ------------------------------
       - name: Package (Windows)
         if: matrix.os == 'windows-latest'
         run: >
-          Compress-Archive -Path target\release\${{ matrix.binary-name }}
+          Compress-Archive -Path "${{ matrix.binary-path }}\${{ matrix.binary-name }}"
           -DestinationPath ${{ matrix.asset }}
-        shell: powershell
 
       - uses: actions/upload-artifact@v4
         with:
