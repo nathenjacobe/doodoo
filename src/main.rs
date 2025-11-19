@@ -716,7 +716,7 @@ fn get_context_prefix() -> String {
     if let Ok(current_dir) = env::current_dir() {
         if let Some(dir_name) = current_dir.file_name() {
             if let Some(name_str) = dir_name.to_str() {
-                return format!("[{}]: c", name_str);
+                return format!("[{}]:", name_str);
             }
         }
     }
